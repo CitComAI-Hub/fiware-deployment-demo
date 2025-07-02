@@ -9,17 +9,17 @@ vcverifier:
   ingress:
     enabled: true
     hosts:
-      - host: provider-verifier.127.0.0.1.nip.io
+      - host: provider-verifier.54.155.89.222.nip.io
         paths:
           - "/"
   deployment:
     verifier:
       # address of the trust anchor
-      tirAddress: http://tir.127.0.0.1.nip.io:8080/
-      did: did:key:zDnaeQfjsx66YNYV86SDBB1e5kunWKJcWwk686dvjirEE7pqW
+      tirAddress: http://trusted-issuers-list:8080
+      did: did:key:zDnaeoJfVdww45uWEoSbXzvc4FnU3NH2tDa8zHvTmw2uWJPeE
     # public address of the verifier, to be provided as oid-config
     server:
-      host: http://provider-verifier.127.0.0.1.nip.io:8080
+      host: http://provider-verifier.54.155.89.222.nip.io
     # access to the internal credentials-config-service
     configRepo:
       configEndpoint: http://credentials-config-service:8080
@@ -29,12 +29,13 @@ credentials-config-service:
 
 # internal trusted issuers list
 trusted-issuers-list:
+  fullnameOverride: trusted-issuers-list
   # only open for demo purposes
   ingress:
     til:
       enabled: true
       hosts:
-        - host: til-provider.127.0.0.1.nip.io
+        - host: til-provider.54.155.89.222.nip.io
           paths:
             - /
 
@@ -70,13 +71,13 @@ apisix:
     # -- configure the ingress to the data service
     ingress:
       enabled: true
-      hostname: mp-data-service.127.0.0.1.nip.io 
+      hostname: mp-data-service.54.155.89.222.nip.io 
   catchAllRoute:
     enabled: false
   routes: |-
     # route to answer all openid-config requests to the data service from within the verifier
     - uri: /.well-known/openid-configuration
-      host: mp-data-service.127.0.0.1.nip.io
+      host: mp-data-service.54.155.89.222.nip.io
       upstream:
         nodes:
           verifier:3000: 1
@@ -86,7 +87,7 @@ apisix:
           uri: /services/data-service/.well-known/openid-configuration
     # route to provider data-space-configuration
     - uri: /.well-known/data-space-configuration
-      host: mp-data-service.127.0.0.1.nip.io
+      host: mp-data-service.54.155.89.222.nip.io
       upstream:
         nodes:
           dsconfig:3002: 1
@@ -100,7 +101,7 @@ apisix:
               content-type: application/json
     # central route to the dataservice
     - uri: /*
-      host: mp-data-service.127.0.0.1.nip.io
+      host: mp-data-service.54.155.89.222.nip.io
       upstream:
         nodes:
           data-service-scorpio:9090: 1
@@ -138,11 +139,11 @@ odrl-pap:
   additonalEnvVars:
     # needs to know the providers identity to 
     - name: GENERAL_ORGANIZATION_DID
-      value: did:key:zDnaeQfjsx66YNYV86SDBB1e5kunWKJcWwk686dvjirEE7pqW
+      value: did:key:zDnaeoJfVdww45uWEoSbXzvc4FnU3NH2tDa8zHvTmw2uWJPeE
   ingress:
     enabled: true
     hosts:
-      - host: pap-provider.127.0.0.1.nip.io
+      - host: pap-provider.54.155.89.222.nip.io
         paths:
           - "/"
 
@@ -166,13 +167,13 @@ scorpio:
       default:
         - type: UserCredential
           trustedParticipantsLists:
-            - http://tir.trust-anchor.svc.cluster.local:8080
+            - http://tir.54.76.44.128.nip.io
           trustedIssuersLists:
             - http://trusted-issuers-list:8080
       operator:
         - type: OperatorCredential
           trustedParticipantsLists:
-            - http://tir.trust-anchor.svc.cluster.local:8080
+            - http://tir.54.76.44.128.nip.io
           trustedIssuersLists:
             - http://trusted-issuers-list:8080
 
@@ -183,7 +184,7 @@ tm-forum-api:
   ingress:
     enabled: true
     hosts:
-      - host: tm-forum-api.127.0.0.1.nip.io
+      - host: tm-forum-api.54.155.89.222.nip.io
         paths:
           - /
 

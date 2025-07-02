@@ -38,11 +38,11 @@ trusted-issuers-list:
     tir:
       enabled: true
       hosts:
-        - host: tir.127.0.0.1.nip.io
+        - host: tir.54.76.44.128.nip.io
     til:
       enabled: true
       hosts:
-        - host: til.127.0.0.1.nip.io
+        - host: til.54.76.44.128.nip.io
 
   ## defaults
 

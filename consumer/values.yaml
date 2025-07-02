@@ -41,7 +41,7 @@ postgresql:
 keycloak:
   ingress:
     enabled: true
-    hostname: keycloak-consumer.127.0.0.1.nip.io
+    hostname: keycloak-consumer.63.33.94.64.nip.io
   
   externalDatabase:
     host: postgresql
@@ -74,10 +74,13 @@ keycloak:
       value: INFO
     # hostname of keycloak to be set as part of the realm config
     - name: KC_HOSTNAME
-      value: keycloak-consumer.127.0.0.1.nip.io
+      value: keycloak-consumer.63.33.94.64.nip.io
+    # Public URL for Keycloak
+    - name: KC_HOSTNAME_URL
+      value: http://keycloak-consumer.63.33.94.64.nip.io
     # did of the consumer
     - name: DID
-      value: "did:key:zDnaefDkNU7T7bBPYPSGW1rGMwVXuna18VjN8nioUYojQVyK8"
+      value: "did:key:zDnaepXo9JSems5fTwkg56GqgLGrqtM11PYwBoa73RTGfhFMf"
 
   extraVolumeMounts:
     - name: did-material
@@ -95,7 +98,7 @@ keycloak:
         name: test-realm-realm
 
   realm:
-    frontendUrl: http://keycloak-consumer.127.0.0.1.nip.io:8080
+    frontendUrl: http://keycloak-consumer.63.33.94.64.nip.io
     import: true
     name: test-realm
     clientRoles: |
