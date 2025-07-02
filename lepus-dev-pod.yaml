@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lepus-dev
+  namespace: provider
+  labels:
+    app: lepus
+spec:
+  containers:
+    - name: lepus
+      image: node:20
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          git clone https://github.com/CitComAI-Hub/lepus.git /lepus && \
+          cd /lepus && \
+          npm install && \
+          npm start
+      ports:
+        - containerPort: 3000
+      env:
+        - name: DEBUG
+          value: "adapter:*"
+        - name: NGSI_V2_CONTEXT_BROKER
+          value: "https://cb.vlci.valencia.es:10027"
+        - name: CONTEXT_URL
+          value: "https://raw.githubusercontent.com/smart-data-models/dataModel.WasteManagement/master/context.jsonld"
+        - name: NOTIFICATION_RELAY_URL
+          value: "http://adapter:3000/notify"
+        - name: NODE_TLS_REJECT_UNAUTHORIZED
+          value: "0"
+        - name: NGSI_V2_TIMEOUT
+          value: "10000"
+        - name: AUTH_URL
+          value: "https://auth.vlci.valencia.es:15001/v3/auth/tokens"
+        - name: AUTH_USER
+          value: "upv_admin"
+        - name: AUTH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: lepus-auth-secret
+              key: AUTH_PASSWORD
+        - name: AUTH_DOMAIN
+          value: "tef_vlci"
+        - name: AUTH_PROJECT
+          value: "/residuos_contenedores_vlc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lepus-dev
+  namespace: provider
+spec:
+  selector:
+    app: lepus
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP 
