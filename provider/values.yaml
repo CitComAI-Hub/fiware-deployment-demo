@@ -35,7 +35,7 @@ trusted-issuers-list:
     til:
       enabled: true
       hosts:
-        - host: til-provider.54.155.89.222.nip.io
+        - host: til-provider.127.0.0.1.nip.io
           paths:
             - /
 
@@ -104,7 +104,7 @@ apisix:
       host: mp-data-service.54.155.89.222.nip.io
       upstream:
         nodes:
-          data-service-scorpio:9090: 1
+          lepus-dev:3000: 1
         type: roundrobin
       plugins:
         # verify the jwt at the verifiers endpoint
