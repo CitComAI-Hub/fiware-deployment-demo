@@ -23,10 +23,6 @@ spec:
           value: "adapter:*"
         - name: NGSI_V2_CONTEXT_BROKER
           value: "https://cb.vlci.valencia.es:10027"
-        - name: CONTEXT_URL
-          value: "https://raw.githubusercontent.com/smart-data-models/dataModel.WasteManagement/master/context.jsonld"
-        - name: NOTIFICATION_RELAY_URL
-          value: "http://adapter:3000/notify"
         - name: NODE_TLS_REJECT_UNAUTHORIZED
           value: "0"
         - name: NGSI_V2_TIMEOUT
@@ -40,10 +36,6 @@ spec:
             secretKeyRef:
               name: lepus-auth-secret
               key: AUTH_PASSWORD
-        - name: AUTH_DOMAIN
-          value: "tef_vlci"
-        - name: AUTH_PROJECT
-          value: "/residuos_contenedores_vlc"
 ---
 apiVersion: v1
 kind: Service
