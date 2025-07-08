@@ -42,7 +42,7 @@ trusted-issuers-list:
     til:
       enabled: true
       hosts:
-        - host: til.54.76.44.128.nip.io
+        - host: til.127.0.0.1.nip.io
 
   ## defaults
 
