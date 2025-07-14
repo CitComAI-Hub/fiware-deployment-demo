@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: waste-collection-demo
+  namespace: consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: waste-collection-demo
+  template:
+    metadata:
+      labels:
+        app: waste-collection-demo
+    spec:
+      containers:
+        - name: flask
+          image: joancipria/waste-collection-demo:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: KEYCLOAK_URL
+              value: "http://keycloak-consumer.63.33.94.64.nip.io"
+            - name: CREDENTIAL_CONFIGURATION_ID
+              value: "operator-credential"
+            - name: MP_DATA_SERVICE_URL
+              value: "http://mp-data-service.54.155.89.222.nip.io"
+            - name: OPENROUTESERVICE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ors-api-key
+                  key: OPENROUTESERVICE_API_KEY
+            - name: KEYCLOAK_USER
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credentials
+                  key: KEYCLOAK_USER
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credentials
+                  key: KEYCLOAK_PASSWORD
+            - name: KEYCLOAK_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credentials
+                  key: KEYCLOAK_CLIENT_ID
+          volumeMounts:
+            - name: wallet-identity
+              mountPath: /app/wallet-identity
+      volumes:
+        - name: wallet-identity
+          secret:
+            secretName: wallet-identity-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: waste-collection-demo
+  namespace: consumer
+spec:
+  selector:
+    app: waste-collection-demo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: waste-collection-demo-ingress
+  namespace: consumer
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: waste-collection-demo.63.33.94.64.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: waste-collection-demo
+                port:
+                  number: 80 

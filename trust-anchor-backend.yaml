@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-backend
+  template:
+    metadata:
+      labels:
+        app: auth-backend
+    spec:
+      containers:
+      - name: auth-backend
+        image: joancipria/auth-backend:latest
+        ports:
+        - containerPort: 4000
+        env:
+        - name: AUTH_USER
+          value: "admin"
+        - name: AUTH_PASS
+          value: "admin"
+        - name: JWT_SECRET
+          value: "supersecret"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-backend
+spec:
+  selector:
+    app: auth-backend
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auth-backend
+spec:
+  rules:
+    - host: auth.54.76.44.128.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-backend
+                port:
+                  number: 4000 

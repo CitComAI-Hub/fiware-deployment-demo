@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trust-anchor-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trust-anchor-ui
+  template:
+    metadata:
+      labels:
+        app: trust-anchor-ui
+    spec:
+      containers:
+      - name: trust-anchor-ui
+        image: joancipria/trusted-issuers-list-ui:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: NEXT_PUBLIC_API_URL
+          value: "http://auth.54.76.44.128.nip.io"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trust-anchor-ui
+spec:
+  selector:
+    app: trust-anchor-ui
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trust-anchor-ui
+spec:
+  rules:
+    - host: ui.54.76.44.128.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: trust-anchor-ui
+                port:
+                  number: 80
