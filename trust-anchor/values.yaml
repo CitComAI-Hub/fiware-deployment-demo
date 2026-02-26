@@ -7,6 +7,10 @@ generatePasswords:
 mysql:
   # -- should it be enabled? set to false if one outside the chart is used.
   enabled: true
+  image:
+    # Change 'bitnami/mysql' to 'bitnamilegacy/mysql'
+    repository: bitnamilegacy/mysql
+    tag: 8.0.31-debian-11-r10
 
   # -- configure persistence, depending on the storageClasses available in your cluster
   primary:
@@ -38,7 +42,7 @@ trusted-issuers-list:
     tir:
       enabled: true
       hosts:
-        - host: tir.54.76.44.128.nip.io
+        - host: tir.54.246.147.114.nip.io
     til:
       enabled: true
       hosts:
